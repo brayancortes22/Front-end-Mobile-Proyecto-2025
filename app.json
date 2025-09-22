@@ -31,6 +31,7 @@
       "output": "static",
       "favicon": "./assets/images/logo.png"
     },
+    "jsEngine": "hermes",
     "plugins": [
       "expo-router",
       [
@@ -45,6 +46,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7f9a23ea-0ad8-455a-9b95-4de890f81088"
+      }
     }
   }
 }

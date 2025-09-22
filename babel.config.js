@@ -1,9 +1,8 @@
 module.exports = function(api) {
   api.cache(true);
   return {
-    presets: ['babel-preset-expo'],
+    presets: ['babel-preset-expo', 'nativewind/babel'],
     plugins: [
-      'nativewind/babel',
       [
         'module-resolver',
         {
@@ -20,7 +19,9 @@ module.exports = function(api) {
           }
         }
       ],
-      'react-native-reanimated/plugin'
+      // Reanimated v4 moved the Babel plugin to react-native-worklets
+      // see the runtime message from Reanimated and use the new plugin
+      'react-native-worklets/plugin'
     ]
   };
 };

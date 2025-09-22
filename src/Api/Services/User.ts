@@ -61,7 +61,9 @@ export async function requestPasswordResetCode(email: string): Promise<{ success
 	const data = await response.json();
 	if (response.ok && data.code) {
 		// Guardar el código en localStorage
-		localStorage.setItem('reset_code', data.code);
+				if (typeof (globalThis as any).localStorage !== 'undefined' && (globalThis as any).localStorage) {
+					(globalThis as any).localStorage.setItem('reset_code', data.code);
+				}
 		return { success: true, code: data.code };
 	}
 	return { success: false, message: data.error || 'No se pudo enviar el código' };

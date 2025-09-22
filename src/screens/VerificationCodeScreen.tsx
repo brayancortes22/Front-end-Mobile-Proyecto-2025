@@ -6,6 +6,9 @@ import {
   Alert,
   Pressable,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, Button } from 'react-native-paper';
@@ -33,8 +36,7 @@ export const VerificationCodeScreen: React.FC = () => {
   const navigation = useNavigation<VerificationCodeScreenNavigationProp>();
   const route = useRoute<VerificationCodeScreenRouteProp>();
   const [isLoading, setIsLoading] = useState(false);
-  const [resendTimer, setResendTimer] = useState(60);
-  const [canResend, setCanResend] = useState(false);
+  
 
   // Obtener el email desde los parámetros de navegación
   const email = route.params?.email || 'ejemplo@soy.sena.edu.co';
@@ -52,17 +54,7 @@ export const VerificationCodeScreen: React.FC = () => {
 
   const codeValue = watch('code');
 
-  // Timer para reenvío de código
-  useEffect(() => {
-    if (resendTimer > 0) {
-      const timer = setTimeout(() => {
-        setResendTimer(resendTimer - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setCanResend(true);
-    }
-  }, [resendTimer]);
+  
 
   const onSubmit = async (data: VerificationCodeFormData) => {
     try {
@@ -108,37 +100,7 @@ export const VerificationCodeScreen: React.FC = () => {
     navigation.goBack();
   };
 
-  const handleResendCode = async () => {
-    if (!canResend) return;
-
-    try {
-      setIsLoading(true);
-      
-      // TODO: Integrar con la API para reenviar código
-      console.log('Resending code to:', email);
-
-      // Simular reenvío
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      Alert.alert(
-        'Código Reenviado',
-        'Se ha enviado un nuevo código de verificación a tu correo electrónico.',
-        [{ text: 'OK' }]
-      );
-
-      // Reiniciar timer
-      setResendTimer(60);
-      setCanResend(false);
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'No se pudo reenviar el código. Por favor, intenta nuevamente.',
-        [{ text: 'OK' }]
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  
 
   const handleSupport = () => {
     Alert.alert(
@@ -164,9 +126,16 @@ export const VerificationCodeScreen: React.FC = () => {
     );
   };
 
+  const buttonFontSize = Math.min(22, Math.max(14, Math.floor(width / 16)));
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+          <View style={styles.content}>
         {/* Header con botón de regreso */}
         <Pressable
           style={styles.backButton}
@@ -258,33 +227,11 @@ export const VerificationCodeScreen: React.FC = () => {
             disabled={isLoading || codeValue.length !== 6}
             style={styles.submitButton}
             contentStyle={styles.submitButtonContent}
-            labelStyle={styles.submitButtonLabel}
+            labelStyle={[styles.submitButtonLabel, { fontSize: buttonFontSize }]}
             buttonColor="#388E3C"
           >
             Verificar Código
           </Button>
-
-          {/* Reenviar código */}
-          <View style={styles.resendContainer}>
-            <Text style={styles.resendText}>
-              ¿No recibiste el código?{' '}
-            </Text>
-            <Pressable
-              onPress={handleResendCode}
-              disabled={!canResend || isLoading}
-              style={[
-                styles.resendButton,
-                (!canResend || isLoading) && styles.resendButtonDisabled
-              ]}
-            >
-              <Text style={[
-                styles.resendButtonText,
-                (!canResend || isLoading) && styles.resendButtonTextDisabled
-              ]}>
-                {canResend ? 'Reenviar' : `Reenviar en ${resendTimer}s`}
-              </Text>
-            </Pressable>
-          </View>
         </View>
 
         {/* Footer */}
@@ -299,7 +246,9 @@ export const VerificationCodeScreen: React.FC = () => {
             <Text style={styles.footerLink}>Política de Privacidad</Text>
           </Pressable>
         </View>
-      </View>
+        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -422,35 +371,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     lineHeight: 20,
   },
-  resendContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -20,
-  },
-  resendText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#757575',
-  },
-  resendButton: {
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-  },
-  resendButtonDisabled: {
-    opacity: 0.5,
-  },
-  resendButtonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-SemiBold',
-    fontWeight: '600',
-    color: '#43A047',
-    textDecorationLine: 'underline',
-  },
-  resendButtonTextDisabled: {
-    color: '#9E9E9E',
-    textDecorationLine: 'none',
-  },
+  
   footer: {
     flexDirection: 'row',
     alignItems: 'center',

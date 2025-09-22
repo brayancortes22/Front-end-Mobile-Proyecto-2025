@@ -9,7 +9,7 @@ import { ENDPOINTS } from '../config/ConfigApi';
  * @param id - ID del módulo
  * @returns Promesa con los datos del módulo
  */
-export async function getModuleForms(id) {
+export async function getModuleForms(id: any) {
 	const url = ENDPOINTS.module.getModuleForms.replace('{id}', id.toString());
 	const response = await fetch(url);
 	if (!response.ok) throw new Error('Error al obtener datos del módulo');
@@ -22,7 +22,7 @@ export async function getModuleForms(id) {
  * @param data - Datos actualizados del módulo
  * @returns Promesa con la respuesta de la API
  */
-export async function putModuleForms(id, data) {
+export async function putModuleForms(id: any, data: any) {
 	const url = ENDPOINTS.module.putModuleForms.replace('{id}', id.toString());
 	const response = await fetch(url, {
 		method: 'PUT',
@@ -37,7 +37,7 @@ export async function putModuleForms(id, data) {
  * @param data - Datos del módulo a crear
  * @returns Promesa con la respuesta de la API
  */
-export async function postModule(data) {
+export async function postModule(data: any) {
 	const response = await fetch(ENDPOINTS.module.post, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },

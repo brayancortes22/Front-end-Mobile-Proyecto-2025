@@ -118,13 +118,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   smallText: {
-    fontSize: 14,
+    fontSize: 12,
   },
   mediumText: {
-    fontSize: 16,
+    fontSize: 12,
   },
   largeText: {
-    fontSize: 18,
+    fontSize: 12,
   },
   disabledText: {
     color: '#9E9E9E',

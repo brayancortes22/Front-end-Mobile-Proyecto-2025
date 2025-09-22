@@ -20,7 +20,7 @@ export async function getFichas() {
  * @param data - Datos de la ficha
  * @returns Promesa con la ficha creada
  */
-export async function createFicha(data) {
+export async function createFicha(data: any) {
   const response = await fetch(ENDPOINTS.ficha.allFichas, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -49,7 +49,7 @@ export async function deleteFicha(id: number | string) {
  * @param data - Nuevos datos para la ficha
  * @returns Promesa con la ficha actualizada
  */
-export async function updateFicha(id: number | string, data) {
+export async function updateFicha(id: number | string, data: any) {
   const url = ENDPOINTS.ficha.IdFicha.replace('{id}', String(id));
   const response = await fetch(url, {
     method: 'PUT',

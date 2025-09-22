@@ -29,15 +29,44 @@
  *   fetch(ENDPOINTS.user.deleteUser.replace('{id}', userId))
  */
 
-import { get } from "http";
-import { permission } from "process";
-
 
 /**
  * URL base de la API. Se puede configurar por variable de entorno VITE_API_BASE_URL.
  * Por defecto apunta a "http://django:8000/api/" para entorno local con Docker.
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://django:8000/api/";
+import Constants from 'expo-constants';
+
+/**
+ * URL base de la API. Se intenta leer de varias fuentes según el entorno:
+ *  - import.meta.env.VITE_API_BASE_URL (Vite / web)
+ *  - process.env.VITE_API_BASE_URL (si está disponible)
+ *  - Constants.expoConfig?.extra?.VITE_API_BASE_URL (expo app config)
+ * Si ninguna está definida, se usa el fallback "http://django:8000/api/".
+ */
+const getEnvVar = () => {
+  // Node / other environments
+  if (typeof process !== 'undefined' && (process.env as any)?.VITE_API_BASE_URL) {
+    return (process.env as any).VITE_API_BASE_URL;
+  }
+
+  // Web builds can expose a global (set by index.html) to pass env vars to runtime
+  // e.g. in web index.html include: <script>window.__VITE_API_BASE_URL = 'https://...'</script>
+  if (typeof globalThis !== 'undefined' && (globalThis as any).__VITE_API_BASE_URL) {
+    return (globalThis as any).__VITE_API_BASE_URL;
+  }
+
+  // Expo constants (app.config extra)
+  try {
+    const expoExtra = (Constants && (Constants as any).expoConfig && (Constants as any).expoConfig.extra) || (Constants && (Constants as any).manifest && (Constants as any).manifest.extra);
+    if (expoExtra && expoExtra.VITE_API_BASE_URL) return expoExtra.VITE_API_BASE_URL;
+  } catch (e) {
+    // ignore
+  }
+
+  return undefined;
+};
+
+const API_BASE_URL = getEnvVar() || "http://django:8000/api/";
 
 
 /**

@@ -139,7 +139,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   color="#BDBDBD" 
                 />
               }
-              style={styles.input}
+              inputStyle={styles.input}
             />
 
             {/* Campo Contraseña */}
@@ -167,7 +167,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   />
                 </TouchableOpacity>
               }
-              style={styles.input}
+              inputStyle={styles.input}
             />
 
             {/* Enlace ¿Olvidaste tu contraseña? */}
