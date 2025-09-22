@@ -20,6 +20,7 @@ import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 import { loginScreenStyles as styles } from '../styles/LoginScreen.styles';
 import { validateInstitutionalLogin } from '../Api/Services/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/AuthContext';
 
 interface LoginScreenProps {
   navigation?: any;
@@ -54,6 +55,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       'La contraseña debe tener al menos 8 caracteres.' : '');
   };
 
+  const { setIsAuthenticated } = useAuth();
+
   const handleLogin = async () => {
     if (emailError || passwordError) return;
     if (!email || !password) {
@@ -68,7 +71,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         // Guardar el token en AsyncStorage
         await AsyncStorage.setItem('accessToken', response.access);
         Alert.alert('Bienvenido', 'Inicio de sesión exitoso');
-        navigation?.navigate('Home');
+        // Marcar autenticado en el contexto para que AppNavigator cambie de stack
+        setIsAuthenticated(true);
       } else {
         Alert.alert('Error', 'Credenciales incorrectas');
       }
@@ -201,6 +205,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               labelStyle={styles.loginButtonText}
             >
               Iniciar Sesión
+            </Button>
+
+            {/* Botón directo a Home para pruebas */}
+            <Button
+              mode="outlined"
+              onPress={() => setIsAuthenticated(true)}
+              style={[styles.loginButton, { marginTop: 10, borderColor: '#00A859' }]}
+              labelStyle={{ color: '#00A859' }}
+            >
+              Ir al Home (prueba)
             </Button>
           </View>
 
