@@ -18,6 +18,7 @@ import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navig
 // Components
 import { SenaLogo } from '../components/ui/SenaLogo';
 import { BSIcon } from '../components/ui/BSIcon';
+import TermsModal from '../components/TermsModal';
 
 // Types
 import { AuthStackParamList } from '../navigation/types';
@@ -36,6 +37,8 @@ export const VerificationCodeScreen: React.FC = () => {
   const navigation = useNavigation<VerificationCodeScreenNavigationProp>();
   const route = useRoute<VerificationCodeScreenRouteProp>();
   const [isLoading, setIsLoading] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
   
 
   // Obtener el email desde los parámetros de navegación
@@ -103,27 +106,32 @@ export const VerificationCodeScreen: React.FC = () => {
   
 
   const handleSupport = () => {
-    Alert.alert(
-      'Soporte',
-      'Para obtener ayuda adicional, contacta al soporte técnico del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({
+      title: 'Soporte',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
 
   const handleTerms = () => {
-    Alert.alert(
-      'Términos de Uso',
-      'Consulta los términos de uso en el portal oficial del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({ title: 'Términos de Uso', content: undefined });
+    setShowTermsModal(true);
   };
 
   const handlePrivacy = () => {
-    Alert.alert(
-      'Política de Privacidad',
-      'Consulta la política de privacidad en el portal oficial del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({
+      title: 'Política de Privacidad',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Consulta la política de privacidad en el portal oficial del SENA.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
 
   const buttonFontSize = Math.min(22, Math.max(14, Math.floor(width / 16)));
@@ -248,6 +256,13 @@ export const VerificationCodeScreen: React.FC = () => {
         </View>
         </View>
         </ScrollView>
+        <TermsModal
+          visible={showTermsModal}
+          onClose={() => setShowTermsModal(false)}
+          onAccept={() => setShowTermsModal(false)}
+          title={modalContent.title}
+          content={modalContent.content}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

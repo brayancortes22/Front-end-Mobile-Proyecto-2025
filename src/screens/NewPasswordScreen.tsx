@@ -14,6 +14,7 @@ import { TextInput, Button } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
 import { newPasswordScreenStyles as styles } from '../styles/NewPasswordScreen.styles';
+import TermsModal from '../components/TermsModal';
 
 // Components
 import { SenaLogo } from '../components/ui/SenaLogo';
@@ -42,6 +43,8 @@ export const NewPasswordScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
 
   // Obtener parámetros de navegación
   const { email, code } = route.params;
@@ -100,27 +103,32 @@ export const NewPasswordScreen: React.FC = () => {
   };
 
   const handleSupport = () => {
-    Alert.alert(
-      'Soporte',
-      'Para obtener ayuda adicional, contacta al soporte técnico del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({
+      title: 'Soporte',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
 
   const handleTerms = () => {
-    Alert.alert(
-      'Términos de Uso',
-      'Consulta los términos de uso en el portal oficial del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({ title: 'Términos de Uso', content: undefined });
+    setShowTermsModal(true);
   };
 
   const handlePrivacy = () => {
-    Alert.alert(
-      'Política de Privacidad',
-      'Consulta la política de privacidad en el portal oficial del SENA.',
-      [{ text: 'OK' }]
-    );
+    setModalContent({
+      title: 'Política de Privacidad',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Consulta la política de privacidad en el portal oficial del SENA.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
 
   const togglePasswordVisibility = () => {
@@ -292,6 +300,13 @@ export const NewPasswordScreen: React.FC = () => {
         </View>
         </View>
         </ScrollView>
+        <TermsModal
+          visible={showTermsModal}
+          onClose={() => setShowTermsModal(false)}
+          onAccept={() => setShowTermsModal(false)}
+          title={modalContent.title}
+          content={modalContent.content}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
