@@ -210,7 +210,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                   color="#BDBDBD" 
                 />
               }
-              style={styles.inputFullWidth}
+              containerStyle={styles.inputFullWidth}
             />
 
             {/* Nombres y Apellidos */}
@@ -229,7 +229,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                     color="#BDBDBD" 
                   />
                 }
-                style={styles.inputHalf}
+                containerStyle={styles.inputHalf}
               />
               
               <Input
@@ -246,7 +246,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                     color="#BDBDBD" 
                   />
                 }
-                style={styles.inputHalf}
+                containerStyle={styles.inputHalf}
               />
             </View>
 
@@ -305,7 +305,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                     color="#BDBDBD" 
                   />
                 }
-                style={styles.inputHalf}
+                containerStyle={styles.inputHalf}
               />
               
               <Input
@@ -322,7 +322,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                     color="#BDBDBD" 
                   />
                 }
-                style={styles.inputHalf}
+                containerStyle={styles.inputHalf}
               />
             </View>
 

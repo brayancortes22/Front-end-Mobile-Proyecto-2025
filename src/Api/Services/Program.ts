@@ -31,7 +31,7 @@ export async function getProgramFichas(programId: number | string) {
  * @param data - Datos del programa
  * @returns Promesa con el programa creado
  */
-export async function createProgram(data) {
+export async function createProgram(data: any) {
   const response = await fetch(ENDPOINTS.program.allPrograms, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -61,7 +61,7 @@ export async function deleteProgram(id: number | string) {
  * @param data - Nuevos datos del programa
  * @returns Promesa con el programa actualizado
  */
-export async function updateProgram(id: number | string, data) {
+export async function updateProgram(id: number | string, data: any) {
   const url = ENDPOINTS.program.IdProgram.replace('{id}', String(id));
   const response = await fetch(url, {
     method: 'PUT',

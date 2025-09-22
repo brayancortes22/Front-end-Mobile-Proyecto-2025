@@ -1,35 +1,42 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, ImageStyle, ViewStyle } from 'react-native';
 
 interface SenaLogoProps {
   size?: number;
   showText?: boolean;
+  style?: ViewStyle | ImageStyle;
 }
 
-export const SenaLogo: React.FC<SenaLogoProps> = ({ size = 100, showText = true }) => (
-  <View style={[styles.logo, { width: size, height: size }]}>  
-    {/* Aquí puedes reemplazar por tu SVG o imagen real del logo SENA */}
-    <View style={styles.circle} />
-    {showText && <Text style={styles.text}>SENA</Text>}
-  </View>
-);
+export const SenaLogo: React.FC<SenaLogoProps> = ({ size = 100, showText = true, style }) => {
+  const logoSize = { width: size, height: size };
+  // ruta relativa desde src/components/ui -> proyecto_root/assets/images
+  const logo = require('../../../assets/images/logoSenaVerde.png');
+
+  return (
+    <View style={[styles.container, style]}>
+      <Image source={logo} style={[styles.logo, logoSize]} resizeMode="contain" />
+      {showText && <Text style={styles.text}>AutoGestión CIES</Text>}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  logo: {
+  container: {
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 12,
+    marginBottom: 16,
   },
-  circle: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 999,
-    backgroundColor: '#43A047',
+  logo: {
+    width: 80,
+    height: 80,
   },
   text: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 24,
     color: '#43A047',
-    fontWeight: 'bold',
+    fontWeight: '700',
+    textAlign: 'center',
   },
 });
 

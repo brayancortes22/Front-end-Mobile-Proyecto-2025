@@ -20,7 +20,7 @@ export async function getKnowledgeAreas() {
  * @param data - Datos del área
  * @returns Promesa con el área creada
  */
-export async function createKnowledgeArea(data) {
+export async function createKnowledgeArea(data: any) {
   const response = await fetch(ENDPOINTS.KnowledgeArea.allKnowledgeAreas, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -49,7 +49,7 @@ export async function deleteKnowledgeArea(id: number | string) {
  * @param data - Nuevos datos del área
  * @returns Promesa con el área actualizada
  */
-export async function updateKnowledgeArea(id: number | string, data) {
+export async function updateKnowledgeArea(id: number | string, data: any) {
   const url = ENDPOINTS.KnowledgeArea.IdKnowledgeArea.replace('{id}', String(id));
   const response = await fetch(url, {
     method: 'PUT',

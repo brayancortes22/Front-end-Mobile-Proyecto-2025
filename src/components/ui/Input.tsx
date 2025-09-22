@@ -42,8 +42,6 @@ const Input: React.FC<InputProps> = ({
       <View style={StyleSheet.flatten([
         styles.inputContainer,
         error ? styles.inputError : null,
-        leftIcon ? styles.inputWithLeftIcon : null,
-        rightIcon ? styles.inputWithRightIcon : null,
       ])}>
         {leftIcon && (
           <View style={styles.leftIconContainer}>
@@ -54,8 +52,6 @@ const Input: React.FC<InputProps> = ({
         <TextInput
           style={StyleSheet.flatten([
             styles.input,
-            leftIcon ? styles.inputWithLeftPadding : null,
-            rightIcon ? styles.inputWithRightPadding : null,
             inputStyle,
           ])}
           placeholderTextColor="#9E9E9E"
@@ -83,6 +79,7 @@ const Input: React.FC<InputProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
+    width: '100%',
   },
   label: {
     fontSize: 16,
@@ -97,37 +94,34 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     borderRadius: 8,
     backgroundColor: '#FFFFFF',
-    minHeight: 48,
+    height: 48,
+    paddingLeft: 12,
+    paddingRight: 12,
+    width: '100%',
   },
   inputError: {
     borderColor: '#DC3545',
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    height: '100%',
+    alignSelf: 'stretch',
     color: '#212121',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  inputWithLeftIcon: {
-    paddingLeft: 0,
-  },
-  inputWithRightIcon: {
-    paddingRight: 0,
-  },
-  inputWithLeftPadding: {
-    paddingLeft: 8,
-  },
-  inputWithRightPadding: {
-    paddingRight: 8,
+    fontSize: 16,
+    paddingVertical: 0,
+    paddingHorizontal: 8,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderColor: 'transparent',
+    textAlignVertical: 'center',
   },
   leftIconContainer: {
-    paddingLeft: 16,
+    width: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
   rightIconContainer: {
-    paddingRight: 16,
+    width: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },

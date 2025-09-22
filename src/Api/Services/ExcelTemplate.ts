@@ -73,16 +73,18 @@ class ExcelTemplateService {
         throw new Error(`Error al descargar plantilla de instructores: ${response.statusText}`);
       }
 
-      // Crear blob y descargar archivo
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'plantilla_instructores.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // Crear blob y descargar archivo (solo en web)
+      if (typeof (globalThis as any).window !== 'undefined' && typeof (globalThis as any).document !== 'undefined') {
+        const blob = await response.blob();
+        const url = (globalThis as any).window.URL.createObjectURL(blob);
+        const link = (globalThis as any).document.createElement('a');
+        link.href = url;
+        link.download = 'plantilla_instructores.xlsx';
+        (globalThis as any).document.body.appendChild(link);
+        link.click();
+        (globalThis as any).document.body.removeChild(link);
+        (globalThis as any).window.URL.revokeObjectURL(url);
+      }
     } catch (error) {
       console.error('Error descargando plantilla de instructores:', error);
       throw error;
@@ -105,16 +107,18 @@ class ExcelTemplateService {
         throw new Error(`Error al descargar plantilla de aprendices: ${response.statusText}`);
       }
 
-      // Crear blob y descargar archivo
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'plantilla_aprendices.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // Crear blob y descargar archivo (solo en web)
+      if (typeof (globalThis as any).window !== 'undefined' && typeof (globalThis as any).document !== 'undefined') {
+        const blob = await response.blob();
+        const url = (globalThis as any).window.URL.createObjectURL(blob);
+        const link = (globalThis as any).document.createElement('a');
+        link.href = url;
+        link.download = 'plantilla_aprendices.xlsx';
+        (globalThis as any).document.body.appendChild(link);
+        link.click();
+        (globalThis as any).document.body.removeChild(link);
+        (globalThis as any).window.URL.revokeObjectURL(url);
+      }
     } catch (error) {
       console.error('Error descargando plantilla de aprendices:', error);
       throw error;
@@ -205,17 +209,25 @@ class ExcelTemplateService {
   async downloadErrorReport(errorReportUrl: string): Promise<void> {
     try {
       // Construir URL completa del servidor
-      const fullUrl = errorReportUrl.startsWith('http') 
-        ? errorReportUrl 
-        : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${errorReportUrl}`;
+      const runtimeApiUrl = (typeof process !== 'undefined' && (process.env as any)?.VITE_API_URL)
+        ? (process.env as any).VITE_API_URL
+        : (typeof globalThis !== 'undefined' && (globalThis as any).__VITE_API_URL)
+          ? (globalThis as any).__VITE_API_URL
+          : 'http://localhost:8000';
 
-      // Crear elemento temporal para descarga
-      const link = document.createElement('a');
-      link.href = fullUrl;
-      link.download = errorReportUrl.split('/').pop() || 'error_report.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const fullUrl = errorReportUrl.startsWith('http')
+        ? errorReportUrl
+        : `${runtimeApiUrl}${errorReportUrl}`;
+
+      // Crear elemento temporal para descarga (solo en web)
+      if (typeof (globalThis as any).document !== 'undefined') {
+        const link = (globalThis as any).document.createElement('a');
+        link.href = fullUrl;
+        link.download = errorReportUrl.split('/').pop() || 'error_report.xlsx';
+        (globalThis as any).document.body.appendChild(link);
+        link.click();
+        (globalThis as any).document.body.removeChild(link);
+      }
     } catch (error) {
       console.error('Error al descargar reporte de errores:', error);
       throw new Error('Error al descargar el reporte de errores');

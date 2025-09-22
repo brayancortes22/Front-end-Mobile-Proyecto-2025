@@ -5,6 +5,9 @@ import {
   Alert,
   Pressable,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, Button } from 'react-native-paper';
@@ -104,9 +107,16 @@ export const ResetPasswordScreen: React.FC = () => {
     );
   };
 
+  const buttonFontSize = Math.min(22, Math.max(14, Math.floor(width / 16)));
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+          <View style={styles.content}>
         {/* Header con botón de regreso */}
         <Pressable
           style={styles.backButton}
@@ -121,10 +131,10 @@ export const ResetPasswordScreen: React.FC = () => {
           <Text style={styles.backButtonText}>Volver a inicio de sesión</Text>
         </Pressable>
 
-        {/* Logo */}
-        <View style={styles.logoContainer}>
-          <SenaLogo size={100} showText={false} />
-        </View>
+         {/* Logo SENA */}
+          <View style={styles.logoContainer}>
+            <SenaLogo size={100} showText={false} />
+          </View>
 
         {/* Título de la aplicación */}
         <Text style={styles.appTitle}>AutoGestión CIES</Text>
@@ -133,8 +143,7 @@ export const ResetPasswordScreen: React.FC = () => {
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Recuperar Contraseña</Text>
           <Text style={styles.description}>
-            Ingresa tu correo electrónico para recibir un código de{'\n'}
-            recuperación.
+            Ingresa tu correo electrónico para recibir un código de recuperación.
           </Text>
         </View>
 
@@ -168,7 +177,7 @@ export const ResetPasswordScreen: React.FC = () => {
                   <TextInput.Icon 
                     icon={() => (
                       <BSIcon 
-                        name="envelope" 
+                        name="email" 
                         size={20} 
                         color="#BDBDBD" 
                       />
@@ -192,7 +201,7 @@ export const ResetPasswordScreen: React.FC = () => {
             disabled={isLoading}
             style={styles.submitButton}
             contentStyle={styles.submitButtonContent}
-            labelStyle={styles.submitButtonLabel}
+            labelStyle={[styles.submitButtonLabel, { fontSize: buttonFontSize }]}
             buttonColor="#388E3C"
           >
             Enviar Código
@@ -211,7 +220,9 @@ export const ResetPasswordScreen: React.FC = () => {
             <Text style={styles.footerLink}>Política de Privacidad</Text>
           </Pressable>
         </View>
-      </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

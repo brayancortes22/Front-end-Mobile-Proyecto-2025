@@ -6,7 +6,7 @@ import { ENDPOINTS } from '../config/ConfigApi';
  * @param data - Datos del formulario a crear
  * @returns Promesa con la respuesta de la API
  */
-export async function postForm(data) {
+export async function postForm(data: any) {
 	const response = await fetch(ENDPOINTS.form.post, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },

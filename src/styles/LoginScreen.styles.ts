@@ -30,7 +30,6 @@ export const loginScreenStyles = StyleSheet.create({
   },
   loginSection: {
     width: '100%',
-    maxWidth: 342,
     alignItems: 'flex-start',
     gap: 12,
   },
@@ -48,29 +47,14 @@ export const loginScreenStyles = StyleSheet.create({
   },
   formContainer: {
     width: '100%',
-    maxWidth: 295,
     gap: 20,
     alignItems: 'center',
+    
   },
-  input: {
-    width: '100%',
-    height: 57,
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
+  input: {},
   forgotPasswordContainer: {
     alignSelf: 'center',
-    marginTop: 8,
+    marginTop: 10,
   },
   forgotPasswordText: {
     fontSize: 16,
@@ -94,6 +78,7 @@ export const loginScreenStyles = StyleSheet.create({
   },
   loginButtonText: {
     fontSize: 25,
+    paddingVertical: 5,
     fontWeight: '600',
     color: '#FFFFFF',
     lineHeight: 20,

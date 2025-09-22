@@ -5,6 +5,9 @@ import {
   Alert,
   Pressable,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, Button } from 'react-native-paper';
@@ -128,9 +131,16 @@ export const NewPasswordScreen: React.FC = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const buttonFontSize = Math.min(22, Math.max(14, Math.floor(width / 16)));
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+          <View style={styles.content}>
         {/* Header con botón de regreso */}
         <Pressable
           style={styles.backButton}
@@ -198,18 +208,7 @@ export const NewPasswordScreen: React.FC = () => {
                     )} 
                   />
                 }
-                right={
-                  <TextInput.Icon
-                    icon={() => (
-                      <BSIcon
-                        name={showPassword ? "eye-slash" : "eye"}
-                        size={20}
-                        color="#BDBDBD"
-                      />
-                    )}
-                    onPress={togglePasswordVisibility}
-                  />
-                }
+                
                 outlineStyle={styles.inputOutline}
                 contentStyle={styles.inputContent}
                 placeholderTextColor="#757575"
@@ -254,18 +253,7 @@ export const NewPasswordScreen: React.FC = () => {
                     )} 
                   />
                 }
-                right={
-                  <TextInput.Icon
-                    icon={() => (
-                      <BSIcon
-                        name={showConfirmPassword ? "eye-slash" : "eye"}
-                        size={20}
-                        color="#BDBDBD"
-                      />
-                    )}
-                    onPress={toggleConfirmPasswordVisibility}
-                  />
-                }
+                
                 outlineStyle={styles.inputOutline}
                 contentStyle={styles.inputContent}
                 placeholderTextColor="#757575"
@@ -283,7 +271,7 @@ export const NewPasswordScreen: React.FC = () => {
             disabled={isLoading}
             style={styles.submitButton}
             contentStyle={styles.submitButtonContent}
-            labelStyle={styles.submitButtonLabel}
+            labelStyle={[styles.submitButtonLabel, { fontSize: buttonFontSize }]}
             buttonColor="#388E3C"
           >
             Actualizar contraseña
@@ -302,7 +290,9 @@ export const NewPasswordScreen: React.FC = () => {
             <Text style={styles.footerLink}>Política de Privacidad</Text>
           </Pressable>
         </View>
-      </View>
+        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

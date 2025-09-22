@@ -5,7 +5,7 @@ import { ENDPOINTS } from '../config/ConfigApi';
  * @param id - ID del rol
  * @returns Promesa con los datos del rol
  */
-export async function getRolPermissions(id) {
+export async function getRolPermissions(id: any) {
 	const url = ENDPOINTS.rol.getRolPermissions.replace('{id}', id.toString());
 	const response = await fetch(url);
 	if (!response.ok) throw new Error('Error al obtener datos del rol');
@@ -18,7 +18,7 @@ export async function getRolPermissions(id) {
  * @param data - Datos actualizados del rol
  * @returns Promesa con la respuesta de la API
  */
-export async function putRolFormPerms(id, data) {
+export async function putRolFormPerms(id: any, data: any) {
 	const url = ENDPOINTS.rol.putRolFormPerms.replace('{id}', id.toString());
 	const response = await fetch(url, {
 		method: 'PUT',
@@ -106,7 +106,7 @@ export async function getRolesUser() {
  * @param data - Datos del rol y permisos
  * @returns Promesa con la respuesta de la API
  */
-export async function postRolPermissions(data) {
+export async function postRolPermissions(data: any) {
 	const response = await fetch(ENDPOINTS.rol.postRolPermissions, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
