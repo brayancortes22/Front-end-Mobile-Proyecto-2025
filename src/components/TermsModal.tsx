@@ -14,6 +14,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { Button } from 'react-native-paper';
 
 import { termsModalStyles as styles } from '../styles/TermsModal.styles';
 import BSIcon from '@/components/ui/BSIcon';
@@ -21,11 +22,14 @@ import BSIcon from '@/components/ui/BSIcon';
 interface TermsModalProps {
   visible: boolean;
   onClose: () => void;
+  onAccept?: () => void;
+  title?: string;
+  content?: string | React.ReactNode;
 }
 
 const { width } = Dimensions.get('window');
 
-export const TermsModal: React.FC<TermsModalProps> = ({ visible, onClose }) => {
+export const TermsModal: React.FC<TermsModalProps> = ({ visible, onClose, onAccept, title, content }) => {
   return (
     <Modal
       visible={visible}
@@ -40,12 +44,19 @@ export const TermsModal: React.FC<TermsModalProps> = ({ visible, onClose }) => {
             <Pressable onPress={onClose} style={styles.closeButton}>
               <BSIcon name="x" size={28} color="#757575" />
             </Pressable>
-            <Text style={styles.title}>Términos y Condiciones</Text>
+            <Text style={styles.title}>{title || 'Términos y Condiciones'}</Text>
           </View>
           <ScrollView style={styles.scrollContent}>
-            {/* Aquí puedes poner el texto legal real o un placeholder */}
-            <Text style={styles.legalText}>
-              {`
+            {/* If content prop is provided render it, otherwise render default legal text */}
+            {content ? (
+              typeof content === 'string' ? (
+                <Text style={styles.legalText}>{content}</Text>
+              ) : (
+                content
+              )
+            ) : (
+              <Text style={styles.legalText}>
+                {`
 Bienvenido a la app SENA AutoGestión CIES. Al usar esta aplicación, aceptas los siguientes términos y condiciones:
 
 1. Uso exclusivo para aprendices, instructores y personal autorizado SENA.
@@ -151,8 +162,27 @@ Los menores de edad pueden utilizar nuestros servicios con el consentimiento de 
 - Supervisión adicional en el procesamiento de datos
 - Derechos especiales de eliminación de datos
 `}
-            </Text>
+              </Text>
+            )}
           </ScrollView>
+          {/* Footer: botones de acción */}
+          <View style={styles.footer}>
+            <Button
+              mode="contained"
+              onPress={() => {
+                if (onAccept) onAccept();
+                else onClose();
+              }}
+              contentStyle={styles.acceptButtonContent}
+              style={styles.acceptButton}
+              labelStyle={styles.acceptButtonText}
+            >
+              Aceptar
+            </Button>
+            <Pressable onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cerrar</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </Modal>

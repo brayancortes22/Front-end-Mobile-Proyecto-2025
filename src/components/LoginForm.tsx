@@ -15,7 +15,7 @@ import SenaLogo from './SenaLogo';
 import Button from './ui/Button';
 import Input from './ui/Input';
 import { NavigationProps } from '../Api/types/entities/user.types';
-import PrivacyPolicyModal from '../screens/PrivacyPolicyModal';
+import PrivacyPolicyModal from './PrivacyPolicyModal';
 
 interface LoginFormProps extends NavigationProps {
   onNavigate?: (view: string) => void;

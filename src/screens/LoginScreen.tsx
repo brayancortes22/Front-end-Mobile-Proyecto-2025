@@ -14,6 +14,7 @@ import { Button } from 'react-native-paper';
 import Input from '../components/ui/Input';
 import SenaLogo from '../components/SenaLogo';
 import { isSenaEmail, isValidPassword } from '../utils/validationlogin';
+import TermsModal from '../components/TermsModal';
 import { loginScreenStyles as styles } from '../styles/LoginScreen.styles';
 import { validateInstitutionalLogin } from '../Api/Services/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,6 +36,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -74,7 +76,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const handleForgotPassword = () => {
-    navigation?.navigate('ResetPassword');
+    navigation?.navigate('ForgotPassword');
   };
 
   const handleRegister = () => {
@@ -82,16 +84,36 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const handleSupport = () => {
-    Alert.alert('Soporte', 'Contacta al equipo de soporte técnico');
+    // Abrir modal con información de soporte
+    setModalContent({
+      title: 'Soporte',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
 
   const handleTermsOfUse = () => {
-    Alert.alert('Términos de Uso', 'Consulta los términos de uso de la aplicación');
+    setModalContent({ title: 'Términos de Uso', content: undefined });
+    setShowTermsModal(true);
   };
 
   const handlePrivacyPolicy = () => {
-    Alert.alert('Política de Privacidad', 'Consulta nuestra política de privacidad');
+    setModalContent({
+      title: 'Política de Privacidad',
+      content: (
+        <Text style={{ color: '#424242', fontSize: 16 }}>
+          Política de privacidad: la aplicación respeta tus datos personales y no los comparte sin tu consentimiento. Para más detalles visita el portal oficial.
+        </Text>
+      ),
+    });
+    setShowTermsModal(true);
   };
+
+  const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
 
   return (
     <SafeAreaView style={styles.container}>
@@ -213,6 +235,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <Text style={styles.footerLink}>Política de Privacidad</Text>
             </TouchableOpacity>
           </View>
+          <TermsModal
+            visible={showTermsModal}
+            onClose={() => setShowTermsModal(false)}
+            onAccept={() => setShowTermsModal(false)}
+            title={modalContent.title}
+            content={modalContent.content}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

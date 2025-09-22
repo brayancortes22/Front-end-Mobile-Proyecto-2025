@@ -7,11 +7,10 @@ import { BSIcon, SenaIcons } from '../components/ui/BSIcon';
 
 // Screens
 import ProfileScreen from '../screens/ProfileScreen';
-import SettingsScreen from '../screens/menu';
+import SettingsScreen from '../components/menu';
 import LoginScreen from '../screens/LoginScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import { ResetPasswordScreen } from '../screens/ResetPasswordScreen';
 import { VerificationCodeScreen } from '../screens/VerificationCodeScreen';
 import { NewPasswordScreen } from '../screens/NewPasswordScreen';
 
@@ -80,7 +79,6 @@ const AuthStackNavigator = () => (
     <AuthStack.Screen name="Login" component={LoginScreenComponent} />
     <AuthStack.Screen name="Register" component={RegisterScreen} />
     <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-    <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     <AuthStack.Screen name="VerificationCode" component={VerificationCodeScreen} />
     <AuthStack.Screen name="NewPassword" component={NewPasswordScreen} />
   </AuthStack.Navigator>

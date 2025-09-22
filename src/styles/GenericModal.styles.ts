@@ -1,38 +1,38 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width } = Dimensions.get('window');
 
-export const termsModalStyles = StyleSheet.create({
+export const genericModalStyles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.32)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
     backgroundColor: '#FFF',
     borderRadius: 10,
-    padding: 24,
-    width: Math.min(width - 32, 420),
+    padding: 20,
+    width: Math.min(width - 32, 520),
     maxHeight: '80%',
-    elevation: 8,
+    elevation: 10,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   closeButton: {
     marginRight: 12,
-    padding: 4,
+    padding: 6,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#43A047',
     flex: 1,
   },
   scrollContent: {
-    maxHeight: 320,
+    maxHeight: 360,
   },
   legalText: {
     fontSize: 16,
@@ -41,7 +41,7 @@ export const termsModalStyles = StyleSheet.create({
     textAlign: 'justify',
   },
   footer: {
-    marginTop: 16,
+    marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     gap: 12,

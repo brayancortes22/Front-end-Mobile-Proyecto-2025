@@ -70,20 +70,6 @@ export const forgotPasswordScreenStyles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    width: '100%',
-    height: 57,
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
   },
   sendButton: {
     width: '100%',
