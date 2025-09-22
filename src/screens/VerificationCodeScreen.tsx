@@ -19,6 +19,8 @@ import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navig
 import { SenaLogo } from '../components/ui/SenaLogo';
 import { BSIcon } from '../components/ui/BSIcon';
 import TermsModal from '../components/TermsModal';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
+import SupportModal from '../components/SupportModal';
 
 // Types
 import { AuthStackParamList } from '../navigation/types';
@@ -39,6 +41,8 @@ export const VerificationCodeScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
   
 
   // Obtener el email desde los parámetros de navegación
@@ -106,15 +110,7 @@ export const VerificationCodeScreen: React.FC = () => {
   
 
   const handleSupport = () => {
-    setModalContent({
-      title: 'Soporte',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowSupportModal(true);
   };
 
   const handleTerms = () => {
@@ -123,15 +119,7 @@ export const VerificationCodeScreen: React.FC = () => {
   };
 
   const handlePrivacy = () => {
-    setModalContent({
-      title: 'Política de Privacidad',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Consulta la política de privacidad en el portal oficial del SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowPrivacyModal(true);
   };
 
   const buttonFontSize = Math.min(22, Math.max(14, Math.floor(width / 16)));
@@ -262,6 +250,15 @@ export const VerificationCodeScreen: React.FC = () => {
           onAccept={() => setShowTermsModal(false)}
           title={modalContent.title}
           content={modalContent.content}
+        />
+        <SupportModal
+          visible={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+        />
+        <PrivacyPolicyModal
+          visible={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+          onAccept={() => setShowPrivacyModal(false)}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -401,3 +398,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 });
+
+

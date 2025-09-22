@@ -15,6 +15,8 @@ import Input from '../components/ui/Input';
 import SenaLogo from '../components/SenaLogo';
 import { isSenaEmail } from '../utils/validationlogin';
 import TermsModal from '../components/TermsModal';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
+import SupportModal from '../components/SupportModal';
 import { registerScreenStyles as styles } from '../styles/RegisterScreen.styles';
 
 interface RegisterScreenProps {
@@ -50,6 +52,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showDocumentPicker, setShowDocumentPicker] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
 
   const documentTypes = [
@@ -160,27 +164,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   };
 
   const handleSupportPress = () => {
-    setModalContent({
-      title: 'Soporte',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowSupportModal(true);
   };
 
   const handlePrivacyPress = () => {
-    setModalContent({
-      title: 'Política de Privacidad',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Política de privacidad: la aplicación respeta tus datos personales y no los comparte sin tu consentimiento. Para más detalles visita el portal oficial.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowPrivacyModal(true);
   };
 
   return (
@@ -404,6 +392,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           }}
           title={modalContent.title}
           content={modalContent.content}
+        />
+        <SupportModal
+          visible={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+        />
+        <PrivacyPolicyModal
+          visible={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+          onAccept={() => setShowPrivacyModal(false)}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>

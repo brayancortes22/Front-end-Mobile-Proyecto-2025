@@ -15,6 +15,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
 import { newPasswordScreenStyles as styles } from '../styles/NewPasswordScreen.styles';
 import TermsModal from '../components/TermsModal';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
+import SupportModal from '../components/SupportModal';
 
 // Components
 import { SenaLogo } from '../components/ui/SenaLogo';
@@ -44,6 +46,8 @@ export const NewPasswordScreen: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
 
   // Obtener parámetros de navegación
@@ -103,15 +107,7 @@ export const NewPasswordScreen: React.FC = () => {
   };
 
   const handleSupport = () => {
-    setModalContent({
-      title: 'Soporte',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowSupportModal(true);
   };
 
   const handleTerms = () => {
@@ -120,15 +116,7 @@ export const NewPasswordScreen: React.FC = () => {
   };
 
   const handlePrivacy = () => {
-    setModalContent({
-      title: 'Política de Privacidad',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Consulta la política de privacidad en el portal oficial del SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    setShowPrivacyModal(true);
   };
 
   const togglePasswordVisibility = () => {
@@ -306,6 +294,15 @@ export const NewPasswordScreen: React.FC = () => {
           onAccept={() => setShowTermsModal(false)}
           title={modalContent.title}
           content={modalContent.content}
+        />
+        <SupportModal
+          visible={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+        />
+        <PrivacyPolicyModal
+          visible={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+          onAccept={() => setShowPrivacyModal(false)}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>

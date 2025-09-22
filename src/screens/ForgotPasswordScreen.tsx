@@ -16,6 +16,8 @@ import SenaLogo from '../components/SenaLogo';
 import { isSenaEmail } from '../utils/validationlogin';
 import { forgotPasswordScreenStyles as styles } from '../styles/ForgotPasswordScreen.styles';
 import TermsModal from '../components/TermsModal';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
+import SupportModal from '../components/SupportModal';
 
 interface ForgotPasswordScreenProps {
   navigation?: any;
@@ -33,6 +35,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
   const [emailError, setEmailError] = useState('');
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -148,17 +152,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
 
           {/* Enlaces del Footer */}
           <View style={styles.footerContainer}>
-            <TouchableOpacity onPress={() => {
-              setModalContent({
-                title: 'Soporte',
-                content: (
-                  <Text style={{ color: '#424242', fontSize: 16 }}>
-                    Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
-                  </Text>
-                ),
-              });
-              setShowTermsModal(true);
-            }}>
+            <TouchableOpacity onPress={() => setShowSupportModal(true)}>
               <Text style={styles.footerLink}>Soporte</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
@@ -168,15 +162,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
               <Text style={styles.footerLink}>Términos de Uso</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-              setModalContent({
-                title: 'Política de Privacidad',
-                content: (
-                  <Text style={{ color: '#424242', fontSize: 16 }}>
-                    Política de privacidad: la aplicación respeta tus datos personales y no los comparte sin tu consentimiento. Para más detalles visita el portal oficial.
-                  </Text>
-                ),
-              });
-              setShowTermsModal(true);
+              setShowPrivacyModal(true);
             }}>
               <Text style={styles.footerLink}>Política de Privacidad</Text>
             </TouchableOpacity>
@@ -188,6 +174,15 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
           onAccept={() => setShowTermsModal(false)}
           title={modalContent.title}
           content={modalContent.content}
+        />
+        <SupportModal
+          visible={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+        />
+        <PrivacyPolicyModal
+          visible={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+          onAccept={() => setShowPrivacyModal(false)}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
