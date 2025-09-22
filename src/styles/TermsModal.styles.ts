@@ -32,7 +32,64 @@ export const termsModalStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    maxHeight: 320,
+    maxHeight: 360,
+  },
+  headerIcon: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  pillIcon: {
+    width: 58,
+    height: 56,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  iconImage: {
+    width: 30,
+    height: 30,
+  },
+  titleLarge: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#757575',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  section: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#cecacaff',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  sectionText: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: '#424242',
+  },
+  list: {
+    marginTop: 6,
+  },
+  listItem: {
+    fontSize: 14,
+    color: '#424242',
+    lineHeight: 22,
+    marginBottom: 4,
   },
   legalText: {
     fontSize: 16,

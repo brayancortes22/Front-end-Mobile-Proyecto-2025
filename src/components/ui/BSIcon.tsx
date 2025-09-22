@@ -55,9 +55,21 @@ export const BSIcon: React.FC<BSIconProps> = ({
   style,
   onPress,
 }) => {
+  // Map common Bootstrap icon names to MaterialIcons equivalents when necessary
+  const bootstrapToMaterialMap: Record<string, string> = {
+    'x-lg': 'close',
+    'x': 'close',
+    'check-lg': 'check',
+    'journal-text': 'description',
+    'file-earmark-text': 'description',
+    // add more mappings here as we standardize names across the project
+  };
+
+  const resolvedName = bootstrapToMaterialMap[name] ?? name;
+
   return (
     <Icon
-      name={name}
+      name={resolvedName}
       size={size}
       color={color}
       style={style}

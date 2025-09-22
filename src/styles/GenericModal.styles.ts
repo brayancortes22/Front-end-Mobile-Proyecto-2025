@@ -13,7 +13,7 @@ export const genericModalStyles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     width: Math.min(width - 32, 520),
-    maxHeight: '80%',
+    maxHeight: '85%',
     elevation: 10,
   },
   header: {
@@ -32,7 +32,7 @@ export const genericModalStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    maxHeight: 360,
+    maxHeight: Math.min(520, Math.round((Dimensions.get('window').height || 800) * 0.6)),
   },
   legalText: {
     fontSize: 16,

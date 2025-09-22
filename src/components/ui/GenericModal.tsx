@@ -27,7 +27,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.header}>
             <Pressable onPress={onClose} style={styles.closeButton}>
-              <BSIcon name="x" size={24} color="#757575" />
+              <BSIcon name="x-lg" size={28} color="#757575" />
             </Pressable>
             <Text style={styles.title}>{title}</Text>
           </View>

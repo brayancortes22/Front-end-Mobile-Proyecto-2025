@@ -15,6 +15,8 @@ import Input from '../components/ui/Input';
 import SenaLogo from '../components/SenaLogo';
 import { isSenaEmail, isValidPassword } from '../utils/validationlogin';
 import TermsModal from '../components/TermsModal';
+import SupportModal from '../components/SupportModal';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 import { loginScreenStyles as styles } from '../styles/LoginScreen.styles';
 import { validateInstitutionalLogin } from '../Api/Services/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,6 +39,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -84,16 +88,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const handleSupport = () => {
-    // Abrir modal con información de soporte
-    setModalContent({
-      title: 'Soporte',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Para soporte técnico, por favor contacta a: soporte@sena.edu.co o llama al 01-8000-SENA.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    // Abrir modal de Soporte
+    setShowSupportModal(true);
   };
 
   const handleTermsOfUse = () => {
@@ -102,15 +98,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const handlePrivacyPolicy = () => {
-    setModalContent({
-      title: 'Política de Privacidad',
-      content: (
-        <Text style={{ color: '#424242', fontSize: 16 }}>
-          Política de privacidad: la aplicación respeta tus datos personales y no los comparte sin tu consentimiento. Para más detalles visita el portal oficial.
-        </Text>
-      ),
-    });
-    setShowTermsModal(true);
+    // abrir modal específico de política de privacidad
+    setShowPrivacyModal(true);
   };
 
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
@@ -242,6 +231,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             title={modalContent.title}
             content={modalContent.content}
           />
+          <PrivacyPolicyModal
+            visible={showPrivacyModal}
+            onClose={() => setShowPrivacyModal(false)}
+            onAccept={() => setShowPrivacyModal(false)}
+          />
+          <SupportModal visible={showSupportModal} onClose={() => setShowSupportModal(false)} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

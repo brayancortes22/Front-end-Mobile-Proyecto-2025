@@ -10,7 +10,7 @@ export const registerScreenStyles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 19,
+    paddingHorizontal: 36,
     paddingVertical: 43,
     gap: 30,
   },
@@ -35,9 +35,9 @@ export const registerScreenStyles = StyleSheet.create({
     gap: 20,
   },
   appTitle: {
-    fontSize: 29,
+    fontSize: 32,
     fontWeight: '700',
-    color: '#43A047',
+    color: '#00A859',
     textAlign: 'center',
     letterSpacing: -0.6,
     lineHeight: 32,
@@ -63,6 +63,8 @@ export const registerScreenStyles = StyleSheet.create({
   },
   inputFullWidth: {
     width: '100%',
+    height: 56,
+    borderRadius: 8,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -73,6 +75,7 @@ export const registerScreenStyles = StyleSheet.create({
     flex: 1,
     height: 56,
     minHeight: 2,
+    borderRadius: 8,
   },
   pickerContainer: {
     height: 48,
@@ -168,7 +171,7 @@ export const registerScreenStyles = StyleSheet.create({
   registerButton: {
     width: '100%',
     height: 56,
-    backgroundColor: '#388E3C',
+    backgroundColor: '#00A859',
     borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: {
@@ -180,7 +183,7 @@ export const registerScreenStyles = StyleSheet.create({
     elevation: 3,
   },
   registerButtonText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700',
     color: '#FFFFFF',
     lineHeight: 24,

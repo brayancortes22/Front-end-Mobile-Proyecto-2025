@@ -10,7 +10,7 @@ export const loginScreenStyles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 19,
+    paddingHorizontal: 36,
     paddingVertical: 43,
     alignItems: 'center',
     gap: 32,
@@ -22,7 +22,7 @@ export const loginScreenStyles = StyleSheet.create({
   appTitle: {
     fontSize: 36,
     fontWeight: '700',
-    color: '#43A047',
+    color: '#00A859',
     textAlign: 'center',
     letterSpacing: -0.6,
     lineHeight: 32,
@@ -51,7 +51,8 @@ export const loginScreenStyles = StyleSheet.create({
     alignItems: 'center',
     
   },
-  input: {},
+  input: {
+  },
   forgotPasswordContainer: {
     alignSelf: 'center',
     marginTop: 10,
@@ -64,7 +65,7 @@ export const loginScreenStyles = StyleSheet.create({
   loginButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#388E3C',
+    backgroundColor: '#00A859',
     borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: {
@@ -77,8 +78,8 @@ export const loginScreenStyles = StyleSheet.create({
     marginTop: 11,
   },
   loginButtonText: {
-    fontSize: 25,
-    paddingVertical: 5,
+    fontSize: 20,
+    paddingVertical: 6,
     fontWeight: '600',
     color: '#FFFFFF',
     lineHeight: 20,

@@ -11,14 +11,15 @@ export const privacyPolicyModalStyles = StyleSheet.create({
   modalContainer: {
     backgroundColor: '#FFF',
     borderRadius: 10,
+    margin: 12,
     padding: 24,
-    width: Math.min(width - 32, 420),
     maxHeight: '80%',
     elevation: 8,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 16,
   },
   closeButton: {
@@ -39,5 +40,16 @@ export const privacyPolicyModalStyles = StyleSheet.create({
     color: '#424242',
     lineHeight: 22,
     textAlign: 'justify',
+  },
+  section: {
+    margin: 12,
+    maxWidth: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
 });
