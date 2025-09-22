@@ -36,7 +36,10 @@ const GreenMenu: React.FC<Props> = ({ onNavigate }) => {
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <Image source={{ uri: assets.imgLogo }} style={styles.logo} />
-        <Text style={styles.titleText}>Autogestión CIES</Text>
+        <View style={styles.titleTextWrap}>
+          <Text style={styles.titleTextTop}>Autogestión</Text>
+          <Text style={styles.titleTextBottom}>CIES</Text>
+        </View>
       </View>
 
       <ScrollView
@@ -110,9 +113,11 @@ const styles = StyleSheet.create({
     top: "10%",
     justifyContent: "space-between",
   },
-  titleRow: { flexDirection: "row", alignItems: "center", paddingBottom: 10 },
-  logo: { width: 48, height: 48, marginRight: 12, resizeMode: "contain" },
-  titleText: { color: "#e6f6ea", fontSize: 16, fontWeight: "600" },
+  titleRow: { flexDirection: "column", alignItems: "flex-start", paddingBottom: 10 },
+  logo: { width: 56, height: 56, marginBottom: 6, resizeMode: "contain" },
+  titleTextWrap: { marginLeft: 0 },
+  titleTextTop: { color: "#e6f6ea", fontSize: 14, fontWeight: "700" },
+  titleTextBottom: { color: "#e6f6ea", fontSize: 16, fontWeight: "800" },
   menuList: { marginTop: 8, flexGrow: 0, maxHeight: 420 },
   menuItem: {
     flexDirection: "row",
