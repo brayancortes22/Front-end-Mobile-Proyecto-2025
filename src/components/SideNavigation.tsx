@@ -23,7 +23,33 @@ const SideNavigation: React.FC<Props> = ({ visible, onClose }) => {
   const handleNavigate = (route: string) => {
     onClose();
     // slight delay so panel closes smoothly
-    setTimeout(() => nav.navigate(route), 250);
+    const normalizeRoute = (r: string) => {
+      if (!r) return 'Main';
+      // If already looks like a screen name (no leading slash), use it
+      if (!r.startsWith('/')) return r;
+      const cleaned = r.replace(/^\/+|\/+$/g, '').toLowerCase();
+      const map: Record<string, string> = {
+        'admin': 'Admin',
+        'inicio': 'Main',
+        'home': 'Main',
+        'perfil': 'Profile',
+        'profile': 'Profile',
+        'settings': 'Settings',
+        'change-password': 'ChangePassword',
+        'edit-profile': 'EditProfile',
+        'register': 'Register',
+        'login': 'Login',
+      };
+      if (map[cleaned]) return map[cleaned];
+      const last = cleaned.split('/').pop() || cleaned;
+      if (map[last]) return map[last];
+      // Fallback: convert last segment to PascalCase and try as screen name
+      const pascal = last.split(/[-_]/).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
+      return pascal || 'Main';
+    };
+
+    const screen = normalizeRoute(route);
+    setTimeout(() => nav.navigate(screen), 250);
   };
 
   return (
