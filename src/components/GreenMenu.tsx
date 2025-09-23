@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,7 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Modal,
+  Pressable,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/AuthContext';
+import { menu } from '../Api/Services/Menu';
+import { MenuItem as MenuItemType, MenuUserInfo } from '../Api/types/entities/menu.types';
+import BSIcon from './ui/BSIcon';
 
 const assets = {
   imgImage:
@@ -28,9 +35,51 @@ type Props = {
 };
 
 const GreenMenu: React.FC<Props> = ({ onNavigate }) => {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
+  const [userInfo, setUserInfo] = useState<MenuUserInfo>({ name: 'Usuario', role: '' });
+  const [loadingMenu, setLoadingMenu] = useState(false);
+
+  const { setIsAuthenticated } = useAuth();
+
   const nav = (route: string) => {
     if (onNavigate) onNavigate(route);
   };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('accessToken');
+      await AsyncStorage.removeItem('user');
+    } catch (e) {
+      // ignore
+    }
+    try { setIsAuthenticated(false); } catch(e){}
+    setProfileOpen(false);
+    nav('Login');
+  };
+
+  // Load user from storage and fetch menu
+  useEffect(() => {
+    const loadMenu = async () => {
+      try {
+        setLoadingMenu(true);
+        const rawUser = await AsyncStorage.getItem('user');
+        if (!rawUser) return;
+        const parsed = JSON.parse(rawUser);
+        const userId = parsed?.id || parsed?.user_id || parsed?.pk || null;
+        const userName = parsed?.nombre || parsed?.name || parsed?.full_name || parsed?.email || '';
+        if (!userId) return;
+        const data = await menu.getMenuItems(userId, userName);
+        setMenuItems(data.menuItems || []);
+        setUserInfo(data.userInfo || { name: userName || 'Usuario', role: '' });
+      } catch (e) {
+        // ignore
+      } finally {
+        setLoadingMenu(false);
+      }
+    };
+    loadMenu();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -46,49 +95,51 @@ const GreenMenu: React.FC<Props> = ({ onNavigate }) => {
         style={styles.menuList}
         contentContainerStyle={{ paddingVertical: 8 }}
       >
-        <TouchableOpacity style={styles.menuItem} onPress={() => nav("Home")}>
-          <Image source={{ uri: assets.imgImage }} style={styles.menuIcon} />
-          <Text style={styles.menuLabel}>Inicio</Text>
-        </TouchableOpacity>
+        {loadingMenu ? (
+          <View style={{ padding: 12 }}><Text style={{ color: '#fff' }}>Cargando...</Text></View>
+        ) : (
+          // Group by module
+          (() => {
+            const groups: Record<string, MenuItemType[]> = {};
+            menuItems.forEach(item => {
+              if (!groups[item.module]) groups[item.module] = [];
+              groups[item.module].push(item);
+            });
+            return Object.entries(groups).map(([module, items]) => {
+              const moduleKey = module.toLowerCase();
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => nav("Settings")}
-        >
-          <Image source={{ uri: assets.icon1 }} style={styles.menuIcon} />
-          <Text style={styles.menuLabel}>Seguridad</Text>
-        </TouchableOpacity>
+                // Only render as a single module button when module is 'inicio'
+                // Other modules (even with a single item) are displayed as a group
+                if (moduleKey === 'inicio') {
+                const target = items[0];
+                return (
+                  <TouchableOpacity key={module} style={[styles.menuItem, { paddingVertical: 14 }]} onPress={() => nav(target.path)}>
+                    <BSIcon name={target?.icon || 'home'} size={18} color="#fff" />
+                    <Text style={[styles.menuLabel, { marginLeft: 8, fontWeight: '800' }]}>{module}</Text>
+                  </TouchableOpacity>
+                );
+              }
 
-        <View style={styles.menuGroup}>
-          <TouchableOpacity
-            style={[styles.menuItem, styles.activeItem]}
-            onPress={() => nav("InicioAdministrador")}
-          >
-            <Image source={{ uri: assets.icon2 }} style={styles.menuIcon} />
-            <Text style={[styles.menuLabel, { color: "#fff" }]}>
-              Asignar seguimiento
-            </Text>
-          </TouchableOpacity>
-
-          <View style={styles.subItem}>
-            <Text style={styles.subText}>• Asignar</Text>
-          </View>
-          <View style={styles.subItem}>
-            <Text style={styles.subText}>• Reasignar</Text>
-          </View>
-          <View style={styles.subItem}>
-            <Text style={styles.subText}>• Seguimiento</Text>
-          </View>
-          <View style={styles.subItem}>
-            <Text style={styles.subText}>• Historial de seguimiento</Text>
-          </View>
-          <View style={styles.subItem}>
-            <Text style={styles.subText}>• Evaluar visita final</Text>
-          </View>
-        </View>
+              return (
+                <View key={module} style={styles.menuGroup}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, marginBottom: 6 }}>
+                    <BSIcon name={items[0]?.icon || 'home'} size={18} color="#fff" />
+                    <Text style={[styles.menuLabel, { marginLeft: 8, fontWeight: '800' }]}>{module}</Text>
+                  </View>
+                  {items.map(i => (
+                    <TouchableOpacity key={i.id} style={[styles.menuItem, styles.subItemRow]} onPress={() => nav(i.path)}>
+                      <Text style={styles.subBullet}>•</Text>
+                      <Text style={[styles.menuLabel, styles.subTextLabel]}>{i.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              );
+            });
+          })()
+        )}
       </ScrollView>
 
-      <TouchableOpacity style={styles.profile} onPress={() => nav("Profile")}>
+      <TouchableOpacity style={styles.profile} onPress={() => setProfileOpen(true)}>
         <Image source={{ uri: assets.avatar }} style={styles.avatar} />
         <View style={{ marginLeft: 12 }}>
           <Text style={styles.profileName}>brandon</Text>
@@ -97,6 +148,34 @@ const GreenMenu: React.FC<Props> = ({ onNavigate }) => {
           </View>
         </View>
       </TouchableOpacity>
+
+      <Modal visible={profileOpen} transparent animationType="fade" onRequestClose={() => setProfileOpen(false)}>
+        <Pressable style={modalStyles.modalOverlay} onPress={() => setProfileOpen(false)} />
+        <View style={modalStyles.profileCardContainer} pointerEvents="box-none">
+          <View style={modalStyles.profileCard}>
+            <Text style={modalStyles.cardName}>brayan stid cortes lombana</Text>
+            <Text style={modalStyles.cardEmail}>bscl20062007@gmail.com</Text>
+
+            <TouchableOpacity style={modalStyles.cardRow} onPress={() => { setProfileOpen(false); nav('Profile'); }}>
+              <Text style={modalStyles.cardLink}>Ver perfil</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={modalStyles.cardMutedRow} onPress={() => { /* cambiar rol UI */ }}>
+              <Text style={modalStyles.cardMuted}>Cambiar rol</Text>
+            </TouchableOpacity>
+
+            <View style={modalStyles.roleRow}>
+              <Image source={{ uri: assets.avatar }} style={modalStyles.roleIcon} />
+              <Text style={modalStyles.roleName}>Administrador</Text>
+              <View style={modalStyles.roleDot} />
+            </View>
+
+            <TouchableOpacity style={modalStyles.logoutButton} onPress={handleLogout}>
+              <Text style={modalStyles.logoutText}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -152,6 +231,60 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   roleText: { color: "#cfe9d1", fontWeight: "700" },
+  subItemRow: { paddingLeft: 24, paddingVertical: 10, alignItems: 'center', flexDirection: 'row' },
+  subBullet: { color: '#d8f0db', fontSize: 14, marginRight: 12 },
+  subTextLabel: { color: '#d8f0db', fontSize: 15 },
 });
+
+// Styles for profile modal/card
+const modalStyles = StyleSheet.create({
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.35)'
+  },
+  profileCardContainer: {
+    position: 'absolute',
+    right: 24,
+    top: 80,
+    width: 300,
+    alignItems: 'flex-end',
+  },
+  profileCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    width: 300,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  cardName: { fontSize: 16, fontWeight: '700', color: '#263238', marginBottom: 4 },
+  cardEmail: { fontSize: 13, color: '#7b8a8d', marginBottom: 12 },
+  cardRow: { paddingVertical: 8 },
+  cardLink: { color: '#263238', fontSize: 15 },
+  cardMutedRow: { paddingVertical: 6 },
+  cardMuted: { color: '#9e9e9e', fontSize: 14 },
+  roleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },
+  roleIcon: { width: 20, height: 20, borderRadius: 10, backgroundColor: '#e0e0e0' },
+  roleName: { marginLeft: 6, color: '#263238', fontWeight: '600' },
+  roleDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#00C853', marginLeft: 'auto' },
+  logoutButton: {
+    marginTop: 14,
+    backgroundColor: '#F28B8B',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logoutText: { color: '#6b0b0b', fontWeight: '700' },
+});
+
+// merge modal styles into styles so exports remain consistent
+Object.assign(styles, modalStyles);
 
 export default GreenMenu;

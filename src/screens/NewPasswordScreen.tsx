@@ -19,7 +19,7 @@ import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 import SupportModal from '../components/SupportModal';
 
 // Components
-import { SenaLogo } from '../components/ui/SenaLogo';
+import SenaLogo from '../components/SenaLogo';
 import { BSIcon } from '../components/ui/BSIcon';
 
 // Types
@@ -27,6 +27,7 @@ import { AuthStackParamList } from '../navigation/types';
 
 // Utils
 import { isValidPassword } from '../utils/validationlogin';
+import { resetPassword } from '../Api/Services/User';
 
 // Interfaces
 interface NewPasswordFormData {
@@ -70,27 +71,14 @@ export const NewPasswordScreen: React.FC = () => {
   const onSubmit = async (data: NewPasswordFormData) => {
     try {
       setIsLoading(true);
-      
-      // TODO: Integrar con la API para actualizar contraseña
-      console.log('New password data:', {
-        email,
-        code,
-        newPassword: data.password,
-      });
-
-      // Simular actualización de contraseña
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      Alert.alert(
-        'Contraseña Actualizada',
-        'Tu contraseña ha sido actualizada exitosamente. Ahora puedes iniciar sesión con tu nueva contraseña.',
-        [
-          {
-            text: 'Ir a Inicio de Sesión',
-            onPress: () => navigation.navigate('Login'),
-          },
-        ]
-      );
+      const res = await resetPassword(email, code, data.password);
+      if (res.success) {
+        Alert.alert('Contraseña Actualizada', 'Tu contraseña ha sido actualizada exitosamente. Ahora puedes iniciar sesión con tu nueva contraseña.', [
+          { text: 'Ir a Inicio de Sesión', onPress: () => navigation.navigate('Login') }
+        ]);
+      } else {
+        Alert.alert('Error', res.message || 'No se pudo actualizar la contraseña. Intenta de nuevo.');
+      }
     } catch (error) {
       Alert.alert(
         'Error',

@@ -62,6 +62,9 @@ export const BSIcon: React.FC<BSIconProps> = ({
     'check-lg': 'check',
     'journal-text': 'description',
     'file-earmark-text': 'description',
+    // common aliases for fingerprint/security icon from different icon sets
+    'bi-fingerprint': 'fingerprint',
+    'fingerprint': 'fingerprint',
     // add more mappings here as we standardize names across the project
   };
 
@@ -127,6 +130,8 @@ export const SenaIcons = {
   // Seguridad
   lock: 'lock',
   lockOpen: 'lock-open',
+  // Huella / autenticación biométrica utilizada en el módulo de seguridad
+  fingerprint: 'fingerprint',
   
   // Documentos
   document: 'description',

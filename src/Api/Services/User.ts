@@ -1,5 +1,6 @@
 import { ENDPOINTS } from "../config/ConfigApi";
 import { ValidateLoginResponse ,UserStatus} from "../types/entities/user.types";
+import { isSenaEmail } from '../../utils/validationlogin';
 
 
 // Servicio para solicitar código de recuperación de contraseña
@@ -41,14 +42,14 @@ export async function deleteUser(id: string) {
 
 /**
  * Solicita el código de recuperación de contraseña para un correo institucional.
- * Solo permite correos @soy.sena.edu.co.
+ * Permite correos institucionales (@soy.sena.edu.co o @sena.edu.co).
  * @param email - Correo institucional del usuario
  * @returns Promesa con el resultado (success, code, message)
  */
 export async function requestPasswordResetCode(email: string): Promise<{ success: boolean; code?: string; message?: string }> {
 	// Validar correo institucional en frontend
-	if (!email.endsWith('@soy.sena.edu.co')) {
-		return { success: false, message: 'Solo se permiten correos institucionales (@soy.sena.edu.co)' };
+	if (!isSenaEmail(email)) {
+		return { success: false, message: 'Solo se permiten correos institucionales (@soy.sena.edu.co o @sena.edu.co)' };
 	}
 
 	const response = await fetch(ENDPOINTS.user.requestPasswordReset, {

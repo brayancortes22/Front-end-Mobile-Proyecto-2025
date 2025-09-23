@@ -16,7 +16,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
 
 // Components
-import { SenaLogo } from '../components/ui/SenaLogo';
+import SenaLogo from '../components/SenaLogo';
+import { verifyResetCode } from '../Api/Services/User';
 import { BSIcon } from '../components/ui/BSIcon';
 import TermsModal from '../components/TermsModal';
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
@@ -66,38 +67,16 @@ export const VerificationCodeScreen: React.FC = () => {
   const onSubmit = async (data: VerificationCodeFormData) => {
     try {
       setIsLoading(true);
-      
-      // TODO: Integrar con la API de verificación de código
-      console.log('Verification code:', data);
-
-      // Simular verificación del código
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Simular validación del código
-      if (data.code === '123456') {
-        Alert.alert(
-          'Código Verificado',
-          'El código es correcto. Ahora puedes establecer una nueva contraseña.',
-          [
-            {
-              text: 'Continuar',
-              onPress: () => navigation.navigate('NewPassword', { email, code: data.code }),
-            },
-          ]
-        );
+      const res = await verifyResetCode(email, data.code);
+      if (res.success) {
+        Alert.alert('Código Verificado', 'El código es correcto. Ahora puedes establecer una nueva contraseña.', [
+          { text: 'Continuar', onPress: () => navigation.navigate('NewPassword', { email, code: data.code }) }
+        ]);
       } else {
-        Alert.alert(
-          'Código Incorrecto',
-          'El código ingresado no es válido. Por favor, verifica e intenta nuevamente.',
-          [{ text: 'OK' }]
-        );
+        Alert.alert('Código Incorrecto', res.message || 'El código ingresado no es válido. Por favor, verifica e intenta nuevamente.');
       }
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'No se pudo verificar el código. Por favor, intenta nuevamente.',
-        [{ text: 'OK' }]
-      );
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'No se pudo verificar el código. Por favor, intenta nuevamente.');
     } finally {
       setIsLoading(false);
     }
