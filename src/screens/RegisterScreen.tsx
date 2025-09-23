@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,10 @@ import TermsModal from '../components/TermsModal';
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 import SupportModal from '../components/SupportModal';
 import { registerScreenStyles as styles } from '../styles/RegisterScreen.styles';
+import { useValidators } from '../hooks/useValidators';
+import { getDocumentTypesWithEmpty } from '../Api/Services/Enums';
+import { registerAprendiz } from '../Api/Services/Person';
+import { capitalizeWords } from '../utils/validationlogin';
 
 interface RegisterScreenProps {
   navigation?: any;
@@ -48,6 +52,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     phone: '',
   });
   
+  const { validateField, validateForm: validateAllFields } = useValidators();
+  
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showDocumentPicker, setShowDocumentPicker] = useState(false);
@@ -56,66 +62,52 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title?: string; content?: React.ReactNode }>({});
 
-  const documentTypes = [
-    { label: 'Cédula de Ciudadanía', value: 'CC' },
-    { label: 'Tarjeta de Identidad', value: 'TI' },
-    { label: 'Cédula de Extranjería', value: 'CE' },
-    { label: 'Pasaporte', value: 'PA' },
-  ];
+  const [documentTypes, setDocumentTypes] = useState<{ label: string; value: string }[]>([]);
+  const [loadingDocumentTypes, setLoadingDocumentTypes] = useState<boolean>(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        setLoadingDocumentTypes(true);
+        const types = await getDocumentTypesWithEmpty();
+        if (mounted && Array.isArray(types)) {
+          setDocumentTypes(types as { label: string; value: string }[]);
+        }
+      } catch (err) {
+        console.error('Error cargando tipos de documento:', err);
+        // Fallback mínimo si el backend falla
+        if (mounted) {
+          setDocumentTypes([
+            { label: 'Seleccione tipo de documento', value: '' },
+            { label: 'Cédula de Ciudadanía', value: 'CC' },
+            { label: 'Tarjeta de Identidad', value: 'TI' },
+          ]);
+        }
+      } finally {
+        if (mounted) setLoadingDocumentTypes(false);
+      }
+    };
+
+    load();
+    return () => { mounted = false; };
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Validaciones en tiempo real
-    let error = '';
-    switch (field) {
-      case 'email':
-        error = !isSenaEmail(value) && value.length > 0 ? 
-          'El correo debe ser institucional (@soy.sena.edu.co o @sena.edu.co)' : '';
-        break;
-      case 'firstName':
-        error = value.length > 0 && value.length < 2 ? 
-          'El nombre debe tener al menos 2 caracteres' : '';
-        break;
-      case 'lastName':
-        error = value.length > 0 && value.length < 2 ? 
-          'Los apellidos deben tener al menos 2 caracteres' : '';
-        break;
-      case 'documentNumber':
-        error = value.length > 0 && (value.length < 6 || !/^\d+$/.test(value)) ? 
-          'El número de documento debe tener al menos 6 dígitos' : '';
-        break;
-      case 'phone':
-        error = value.length > 0 && (value.length < 10 || !/^\d+$/.test(value)) ? 
-          'El teléfono debe tener al menos 10 dígitos' : '';
-        break;
-    }
-    
-    setErrors(prev => ({ ...prev, [field]: error }));
+    // Validación en tiempo real usando hook reutilizable
+    const fieldError = validateField(field, value, { ...formData, [field]: value });
+    setErrors(prev => ({ ...prev, [field]: fieldError }));
   };
 
   const validateForm = (): boolean => {
-    const newErrors = {
-      email: '',
-      firstName: '',
-      lastName: '',
-      documentType: '',
-      documentNumber: '',
-      phone: '',
-    };
-
-    // Validar campos requeridos
-    if (!formData.email) newErrors.email = 'El correo es requerido';
-    else if (!isSenaEmail(formData.email)) newErrors.email = 'Correo institucional inválido';
-
-    if (!formData.firstName) newErrors.firstName = 'El nombre es requerido';
-    if (!formData.lastName) newErrors.lastName = 'Los apellidos son requeridos';
-    if (!formData.documentType) newErrors.documentType = 'Selecciona el tipo de documento';
-    if (!formData.documentNumber) newErrors.documentNumber = 'El número de documento es requerido';
-    if (!formData.phone) newErrors.phone = 'El teléfono es requerido';
-
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== '');
+    const newErrors = validateAllFields(formData as any);
+    // normalize undefined to empty strings for compatibility with UI
+    const normalizedErrors: any = {};
+    Object.keys(newErrors).forEach(k => { normalizedErrors[k] = newErrors[k] || ''; });
+    setErrors(normalizedErrors);
+    const values = Object.values(normalizedErrors).map(v => String(v));
+    return !values.some((error) => error !== '');
   };
 
   const handleRegister = async () => {
@@ -131,26 +123,38 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
     setLoading(true);
     try {
-      // TODO: Implementar llamada a la API de registro
-      console.log('Registrando usuario:', formData);
-      
-      // Simulación de registro exitoso
-      setTimeout(() => {
-        setLoading(false);
-        Alert.alert(
-          'Registro Exitoso', 
-          'Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.',
-          [
-            {
-              text: 'Ir al Login',
-              onPress: () => navigation?.navigate('Login'),
-            },
-          ]
-        );
-      }, 2000);
-    } catch (error) {
+      // Mapear nombres y apellidos (capitalizar)
+      const [first_name, ...restNames] = capitalizeWords((formData.firstName || '').trim()).split(' ');
+      const second_name = restNames.join(' ');
+      const [first_last_name, ...restSurnames] = capitalizeWords((formData.lastName || '').trim()).split(' ');
+      const second_last_name = restSurnames.join(' ');
+
+      const payload = {
+        email: formData.email,
+        first_name: first_name || '',
+        second_name: second_name || undefined,
+        first_last_name: first_last_name || '',
+        second_last_name: second_last_name || undefined,
+        type_identification: formData.documentType,
+        number_identification: formData.documentNumber,
+        phone_number: formData.phone,
+        password: formData.documentNumber, // temporal: usar documento como password
+      };
+
+      const response = await registerAprendiz(payload as any);
       setLoading(false);
-      Alert.alert('Error', 'Error al crear la cuenta. Inténtalo de nuevo.');
+      Alert.alert(
+        'Registro Exitoso',
+        'Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.',
+        [
+          { text: 'Ir al Login', onPress: () => navigation?.navigate('Login') }
+        ]
+      );
+    } catch (err: any) {
+      setLoading(false);
+      console.error('Error registerAprendiz:', err);
+      const serverMessage = err?.message || 'Error al crear la cuenta. Inténtalo de nuevo.';
+      Alert.alert('Error', serverMessage);
     }
   };
 
@@ -271,12 +275,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 onPress={() => setShowDocumentPicker(!showDocumentPicker)}
               >
                 <Text style={[
-                  styles.pickerText, 
-                  formData.documentType ? styles.pickerTextSelected : styles.pickerTextPlaceholder
+                  styles.pickerText,
+                  formData.documentType ? styles.pickerTextSelected : styles.pickerTextPlaceholder,
                 ]}>
-                  {formData.documentType 
-                    ? documentTypes.find(type => type.value === formData.documentType)?.label 
-                    : 'Tipo de documento'
+                  {loadingDocumentTypes
+                    ? 'Cargando tipos...'
+                    : (formData.documentType
+                        ? documentTypes.find(type => type.value === formData.documentType)?.label
+                        : (documentTypes.length > 0 ? documentTypes[0].label || 'Tipo de documento' : 'Tipo de documento')
+                      )
                   }
                 </Text>
                 <BSIcon 
@@ -289,18 +296,24 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
               {showDocumentPicker && (
                 <View style={styles.pickerDropdown}>
-                  {documentTypes.map((type) => (
-                    <TouchableOpacity
-                      key={type.value}
-                      style={styles.pickerOption}
-                      onPress={() => {
-                        handleInputChange('documentType', type.value);
-                        setShowDocumentPicker(false);
-                      }}
-                    >
-                      <Text style={styles.pickerOptionText}>{type.label}</Text>
-                    </TouchableOpacity>
-                  ))}
+                  {loadingDocumentTypes ? (
+                    <View style={styles.pickerOption}>
+                      <Text style={styles.pickerOptionText}>Cargando...</Text>
+                    </View>
+                  ) : (
+                    documentTypes.map((type, idx) => (
+                      <TouchableOpacity
+                        key={`${type.value}-${idx}`}
+                        style={styles.pickerOption}
+                        onPress={() => {
+                          handleInputChange('documentType', type.value);
+                          setShowDocumentPicker(false);
+                        }}
+                      >
+                        <Text style={styles.pickerOptionText}>{type.label}</Text>
+                      </TouchableOpacity>
+                    ))
+                  )}
                 </View>
               )}
             </View>

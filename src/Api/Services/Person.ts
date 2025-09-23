@@ -59,8 +59,20 @@ export async function registerAprendiz(payload: RegisterPayload): Promise<Regist
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) {
-    throw new Error("Error en el registro");
+  const text = await response.text();
+  let data: any = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (e) {
+    // non-json response
   }
-  return response.json();
+  if (!response.ok) {
+    // Try to extract message or validation errors
+    const message = data?.detail || data?.message || JSON.stringify(data) || 'Error en el registro';
+    const err = new Error(String(message));
+    // Attach raw body for callers if needed
+    (err as any).response = data;
+    throw err;
+  }
+  return data as RegisterResponse;
 }

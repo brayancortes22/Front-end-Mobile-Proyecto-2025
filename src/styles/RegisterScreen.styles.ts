@@ -95,6 +95,7 @@ export const registerScreenStyles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 2,
+    boxShadow: '0px 2px 4px rgba(0,0,0,0.06)',
   },
   pickerWrapper: {
     position: 'relative',
@@ -132,6 +133,7 @@ export const registerScreenStyles = StyleSheet.create({
     },
     shadowOpacity: 0.12,
     shadowRadius: 8,
+    boxShadow: '0px 4px 8px rgba(0,0,0,0.12)',
   },
   pickerOption: {
     paddingHorizontal: 15,
@@ -181,6 +183,7 @@ export const registerScreenStyles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 4,
     elevation: 3,
+    boxShadow: '0px 4px 8px rgba(0,0,0,0.12)',
   },
   registerButtonText: {
     fontSize: 20,

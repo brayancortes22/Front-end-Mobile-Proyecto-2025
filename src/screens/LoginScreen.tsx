@@ -70,6 +70,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       if (response.access) {
         // Guardar el token en AsyncStorage
         await AsyncStorage.setItem('accessToken', response.access);
+        if (response.user) {
+          await AsyncStorage.setItem('user', JSON.stringify(response.user));
+        }
         Alert.alert('Bienvenido', 'Inicio de sesión exitoso');
         // Marcar autenticado en el contexto para que AppNavigator cambie de stack
         setIsAuthenticated(true);

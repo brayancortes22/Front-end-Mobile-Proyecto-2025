@@ -11,18 +11,25 @@ export interface DocumentType {
  * @returns Promise<DocumentType[]> - Lista de tipos de documento
  */
 export async function getDocumentTypes(): Promise<DocumentType[]> {
-  const response = await fetch(ENDPOINTS.enums.getDocumentTypes, {
+  const url = ENDPOINTS.enums.getDocumentTypes;
+  const response = await fetch(url, {
     method: "GET",
     headers: {
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
   });
-  
+
+  const text = await response.text();
+  let data: any = null;
+  try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+
   if (!response.ok) {
-    throw new Error("Error al obtener los tipos de documento");
+    const errMsg = `GET ${url} failed: ${response.status} ${response.statusText} - ${JSON.stringify(data)}`;
+    throw new Error(errMsg);
   }
-  
-  return response.json();
+
+  return data as DocumentType[];
 }
 
 /**

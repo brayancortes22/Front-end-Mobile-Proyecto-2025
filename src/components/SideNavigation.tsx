@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
   modalSafeArea: { flex: 1, backgroundColor: 'transparent' },
   panelWrapper: { position: 'absolute', left: 0, top: 0, bottom: 0, width: PANEL_WIDTH, paddingLeft: 8 },
-  panelInner: { flex: 1, backgroundColor: 'transparent' , paddingTop: 0, paddingHorizontal: 0, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 8, elevation: 10 },
+  panelInner: { flex: 1, backgroundColor: 'transparent' , paddingTop: 0, paddingHorizontal: 0, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 8, elevation: 10, boxShadow: '0px 4px 8px rgba(0,0,0,0.15)' },
   title: { fontSize: 18, fontWeight: '700', marginBottom: 12, color: '#263238' },
   item: { paddingVertical: 12, borderBottomColor: '#eee', borderBottomWidth: 1 },
   itemText: { fontSize: 16, color: '#263238' },

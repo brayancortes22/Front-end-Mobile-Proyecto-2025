@@ -18,6 +18,7 @@ import { forgotPasswordScreenStyles as styles } from '../styles/ForgotPasswordSc
 import TermsModal from '../components/TermsModal';
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 import SupportModal from '../components/SupportModal';
+import { requestPasswordResetCode } from '../Api/Services/User';
 
 interface ForgotPasswordScreenProps {
   navigation?: any;
@@ -52,26 +53,18 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
 
     setLoading(true);
     try {
-      // TODO: Implementar llamada a la API de recuperación
-      console.log('Enviando código a:', email);
-      
-      // Simulación de envío exitoso
-      setTimeout(() => {
-        setLoading(false);
-        Alert.alert(
-          'Código Enviado', 
-          'Se ha enviado un código de recuperación a tu correo electrónico.',
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation?.navigate('VerificationCode'),
-            },
-          ]
-        );
-      }, 2000);
-    } catch (error) {
+      const res = await requestPasswordResetCode(email);
       setLoading(false);
-      Alert.alert('Error', 'Error al enviar el código. Inténtalo de nuevo.');
+      if (res.success) {
+        Alert.alert('Código Enviado', 'Se ha enviado un código de recuperación a tu correo electrónico.', [
+          { text: 'OK', onPress: () => navigation?.navigate('VerificationCode', { email }) }
+        ]);
+      } else {
+        Alert.alert('Error', res.message || 'No se pudo enviar el código');
+      }
+    } catch (err: any) {
+      setLoading(false);
+      Alert.alert('Error', err.message || 'Error al enviar el código. Inténtalo de nuevo.');
     }
   };
 

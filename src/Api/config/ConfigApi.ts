@@ -46,27 +46,44 @@ import Constants from 'expo-constants';
 const getEnvVar = () => {
   // Node / other environments
   if (typeof process !== 'undefined' && (process.env as any)?.VITE_API_BASE_URL) {
-    return (process.env as any).VITE_API_BASE_URL;
+    const v = (process.env as any).VITE_API_BASE_URL;
+    try { console.debug('[ConfigApi] Found VITE_API_BASE_URL in process.env ->', v); } catch(e){}
+    return v;
   }
 
   // Web builds can expose a global (set by index.html) to pass env vars to runtime
   // e.g. in web index.html include: <script>window.__VITE_API_BASE_URL = 'https://...'</script>
   if (typeof globalThis !== 'undefined' && (globalThis as any).__VITE_API_BASE_URL) {
-    return (globalThis as any).__VITE_API_BASE_URL;
+    const v = (globalThis as any).__VITE_API_BASE_URL;
+    try { console.debug('[ConfigApi] Found VITE_API_BASE_URL in globalThis ->', v); } catch(e){}
+    return v;
   }
 
   // Expo constants (app.config extra)
   try {
     const expoExtra = (Constants && (Constants as any).expoConfig && (Constants as any).expoConfig.extra) || (Constants && (Constants as any).manifest && (Constants as any).manifest.extra);
     if (expoExtra && expoExtra.VITE_API_BASE_URL) return expoExtra.VITE_API_BASE_URL;
+    if (expoExtra && expoExtra.VITE_API_BASE_URL) {
+      try { console.debug('[ConfigApi] Found VITE_API_BASE_URL in Expo Constants.expoConfig.extra ->', expoExtra.VITE_API_BASE_URL); } catch(e){}
+      return expoExtra.VITE_API_BASE_URL;
+    }
   } catch (e) {
     // ignore
   }
 
+  try { console.debug('[ConfigApi] VITE_API_BASE_URL not found in process/global/Expo extras'); } catch(e){}
   return undefined;
 };
 
 const API_BASE_URL = getEnvVar() || "http://django:8000/api/";
+
+// Log the resolved base URL to help debugging environment issues (e.g. requests going to packager:8081)
+try {
+  // Use console.debug so it appears in Metro/Expo logs
+  console.debug('[ConfigApi] Resolved API_BASE_URL ->', API_BASE_URL);
+} catch (e) {
+  // ignore in non-runtime environments
+}
 
 
 /**

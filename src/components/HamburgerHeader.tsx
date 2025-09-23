@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.03,
     shadowRadius: 6,
     elevation: 2,
+    boxShadow: '0px 2px 6px rgba(0,0,0,0.03)',
   },
   leftColumn: { flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' },
   menuButton: {

@@ -91,3 +91,12 @@ export const validateSecurePassword = (password: string): { isValid: boolean; me
   
   return { isValid: true, message: 'Contraseña válida' };
 };
+
+/**
+ * Capitaliza cada palabra en un texto
+ * @param text - Texto a capitalizar
+ */
+export const capitalizeWords = (text: string): string => {
+  if (!text) return '';
+  return text.replace(/\b\w+/g, (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+};
