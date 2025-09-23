@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BSIcon from './ui/BSIcon';
+import BSIcon from '../ui/BSIcon';
 
 interface Props {
   iconName: string;

@@ -14,7 +14,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import { VerificationCodeScreen } from '../screens/VerificationCodeScreen';
 import { NewPasswordScreen } from '../screens/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
-import AdminScreen from '../screens/AdminScreen';
+import SeguridadScreen from '../screens/SeguridadScreen';
 
 // Types
 import { AuthStackParamList, RootStackParamList } from './types';
@@ -44,7 +44,7 @@ const AuthStackNavigator = () => (
 const AppStackNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Main" component={HomeScreen} />
-    <Stack.Screen name="Admin" component={AdminScreen} />
+    <Stack.Screen name="Admin" component={SeguridadScreen} />
     <Stack.Screen name="Profile" component={ProfileScreen} />
     <Stack.Screen name="Settings" component={SettingsScreen} />
     <Stack.Screen name="EditProfile" component={ProfileScreen} />
