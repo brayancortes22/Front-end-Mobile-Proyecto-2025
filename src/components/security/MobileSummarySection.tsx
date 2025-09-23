@@ -10,24 +10,24 @@ const MobileSummarySection = () => {
         <Text style={styles.subtitulo}>Usuarios asignados por rol</Text>
         {/* Aquí irían los grupos, puedes mapear los datos si lo deseas */}
         <View style={styles.groups}>
-          <View style={styles.rolInfo}><Text style={styles.rol}>Administrador</Text><Text style={styles.rolDesc}>Acceso completo al sistema</Text></View>
-          <View style={styles.contador}><Text style={styles.contadorText}>3 Administradores</Text></View>
+          <View style={styles.rolInfo}><Text style={styles.rol}>Usuarios</Text><Text style={styles.rolDesc}>Usuarios del sistema</Text></View>
+          <View style={[styles.contador, styles.bgUsuarios]}><Text style={[styles.contadorText, styles.textUsuarios]}>22 usuarios</Text></View>
         </View>
         <View style={styles.groups}>
-          <View style={styles.rolInfo}><Text style={styles.rol}>Usuarios</Text><Text style={styles.rolDesc}>Usuarios del sistema</Text></View>
-          <View style={styles.contador}><Text style={styles.contadorText}>22 Usuarios</Text></View>
+          <View style={styles.rolInfo}><Text style={styles.rol}>Administradores</Text><Text style={styles.rolDesc}>Acceso completo al sistema</Text></View>
+          <View style={[styles.contador, styles.bgAdministradores]}><Text style={[styles.contadorText, styles.textAdministradores]}>3 Administradores</Text></View>
         </View>
         <View style={styles.groups}>
           <View style={styles.rolInfo}><Text style={styles.rol}>Aprendices</Text><Text style={styles.rolDesc}>Aprendices del sistema</Text></View>
-          <View style={styles.contador}><Text style={styles.contadorText}>3321 Aprendices</Text></View>
+          <View style={[styles.contador, styles.bgAprendices]}><Text style={styles.contadorText}>3321 Aprendices</Text></View>
         </View>
         <View style={styles.groups}>
           <View style={styles.rolInfo}><Text style={styles.rol}>Instructores</Text><Text style={styles.rolDesc}>Instructores del sistema</Text></View>
-          <View style={styles.contador}><Text style={styles.contadorText}>33 Instructores</Text></View>
+          <View style={[styles.contador, styles.bgInstructores]}><Text style={styles.contadorText}>33 Instructores</Text></View>
         </View>
         <View style={styles.groups}>
           <View style={styles.rolInfo}><Text style={styles.rol}>Coordinadores</Text><Text style={styles.rolDesc}>Coordinadores del sistema</Text></View>
-          <View style={styles.contador}><Text style={styles.contadorText}>1 Coordinador</Text></View>
+          <View style={[styles.contador, styles.bgCoordinadores]}><Text style={styles.contadorText}>1 Coordinador</Text></View>
         </View>
       </View>
     </View>
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
   },
   contador: {
-    backgroundColor: "#e0f5cd",
     borderRadius: 10,
     padding: 10,
     minWidth: 100,
@@ -99,11 +98,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   contadorText: {
-    color: "#16a34a",
     fontSize: 15,
     fontFamily: "Inter-Bold",
     textAlign: "center",
   },
+  bgUsuarios: { backgroundColor: "#f5cdcd" },
+  textUsuarios: { color: "#dc2626" },
+  bgAdministradores: { backgroundColor: "#e0f5cd" },
+  textAdministradores: { color: "#16a34a" },
+  bgAprendices: { backgroundColor: "#cddef5" },
+  bgInstructores: { backgroundColor: "#f5edcd" },
+  bgCoordinadores: { backgroundColor: "#f0cdf5" },
 });
 
 export default MobileSummarySection;
